@@ -6,7 +6,6 @@
           <router-link to="/" class="logo">🔥 好价分享</router-link>
           <div class="nav-links">
             <router-link to="/">首页</router-link>
-            <router-link to="/admin">后台管理</router-link>
           </div>
         </div>
       </div>
