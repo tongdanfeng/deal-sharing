@@ -1,11 +1,36 @@
 <template>
   <div class="admin">
-    <div class="container">
+    <!-- 密码验证页面 -->
+    <div v-if="!isAuthenticated" class="login-container">
+      <div class="login-box">
+        <h2>🔒 后台管理</h2>
+        <p>请输入访问密码</p>
+        <form @submit.prevent="handleLogin">
+          <div class="form-group">
+            <input 
+              v-model="password" 
+              type="password" 
+              placeholder="请输入密码" 
+              required
+              autofocus
+            />
+          </div>
+          <button type="submit" class="btn btn-primary">登录</button>
+          <p v-if="loginError" class="error-msg">{{ loginError }}</p>
+        </form>
+      </div>
+    </div>
+
+    <!-- 后台管理内容 -->
+    <div v-else class="container">
       <div class="admin-header">
         <h1>后台管理</h1>
-        <button class="btn btn-primary" @click="showCreateModal = true">
-          + 新增优惠
-        </button>
+        <div class="header-actions">
+          <button class="btn btn-secondary" @click="handleLogout">退出登录</button>
+          <button class="btn btn-primary" @click="showCreateModal = true">
+            + 新增优惠
+          </button>
+        </div>
       </div>
 
       <!-- 优惠列表表格 -->
@@ -152,6 +177,40 @@
 import { ref, onMounted } from 'vue'
 import { adminGetDeals, adminCreateDeal, adminUpdateDeal, adminDeleteDeal } from '../api'
 
+// 密码验证
+const isAuthenticated = ref(false)
+const password = ref('')
+const loginError = ref('')
+
+// 设置你的密码（修改这里）
+const ADMIN_PASSWORD = 'admin123'
+
+const handleLogin = () => {
+  if (password.value === ADMIN_PASSWORD) {
+    isAuthenticated.value = true
+    loginError.value = ''
+    // 保存到 sessionStorage，关闭浏览器后失效
+    sessionStorage.setItem('admin_auth', 'true')
+  } else {
+    loginError.value = '密码错误，请重试'
+    password.value = ''
+  }
+}
+
+const handleLogout = () => {
+  isAuthenticated.value = false
+  sessionStorage.removeItem('admin_auth')
+  password.value = ''
+}
+
+// 检查是否已登录
+onMounted(() => {
+  if (sessionStorage.getItem('admin_auth') === 'true') {
+    isAuthenticated.value = true
+  }
+  loadDeals()
+})
+
 const deals = ref([])
 const showCreateModal = ref(false)
 const showEditModal = ref(false)
@@ -260,11 +319,84 @@ onMounted(() => {
   padding: 20px 0;
 }
 
+/* 登录页面样式 */
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.login-box {
+  background: #fff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.login-box h2 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.login-box p {
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.login-box .form-group {
+  margin-bottom: 20px;
+}
+
+.login-box input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.login-box input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.login-box .btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+}
+
+.error-msg {
+  color: #f44336;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
 .admin-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-secondary {
+  background: #666;
+  color: #fff;
+}
+
+.btn-secondary:hover {
+  background: #555;
 }
 
 .admin-header h1 {
