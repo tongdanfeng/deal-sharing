@@ -1,6 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float, DateTime, Boolean, Text
-from sqlalchemy.sql import func
-from database import Base
+from database import Base, get_china_time
 
 
 class Deal(Base):
@@ -19,6 +18,6 @@ class Deal(Base):
     coupon_code = Column(String(100), comment="优惠码")
     is_active = Column(Boolean, default=True, comment="是否有效")
     is_featured = Column(Boolean, default=False, comment="是否推荐")
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    created_at = Column(DateTime(timezone=True), default=get_china_time)
+    updated_at = Column(DateTime(timezone=True), onupdate=get_china_time)
     expire_at = Column(DateTime(timezone=True), comment="过期时间")
