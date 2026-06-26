@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const api = axios.create({
   baseURL: 'https://deal-sharing-backend.onrender.com/api',
-  timeout: 10000
+  timeout: 60000  // 60秒，适应Render免费版慢启动
 })
 
 // 获取优惠列表
