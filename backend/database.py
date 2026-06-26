@@ -14,7 +14,7 @@ def get_china_time():
 # 数据库连接字符串
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql://postgres:320324qaz.%40%40%40@db.qilsaxyswcnvzdywrdsh.supabase.co:5432/postgres"
+    "postgresql://postgres:320324qaz.%40%40%40@db.qilsaxyswcnvzdywrdsh.supabase.co:5432/postgres?sslmode=require&target_session_attrs=any"
 )
 
 engine = create_engine(DATABASE_URL)
