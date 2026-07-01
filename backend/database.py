@@ -11,10 +11,10 @@ def get_china_time():
     """获取中国时区的当前时间"""
     return datetime.now(CHINA_TZ)
 
-# 数据库连接字符串（从环境变量读取，如果没有则使用 SQLite 作为后备）
+# 数据库连接字符串
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql://postgres:320324qaz.@@@db.qilsaxyswcnvzdywrdsh.supabase.co:5432/postgres"
+    "postgresql://postgres:320324qaz.%40%40%40@db.qilsaxyswcnvzdywrdsh.supabase.co:5432/postgres?sslmode=require&target_session_attrs=any"
 )
 
 engine = create_engine(DATABASE_URL)
